@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 270 15% 98%;
+    --foreground: 270 30% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 270 30% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 270 30% 10%;
+
+    --primary: 270 45% 30%;
+    --primary-foreground: 45 100% 95%;
+
+    --secondary: 45 80% 55%;
+    --secondary-foreground: 270 45% 15%;
+
+    --muted: 270 10% 94%;
+    --muted-foreground: 270 10% 45%;
+
+    --accent: 45 90% 60%;
+    --accent-foreground: 270 45% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 270 15% 88%;
+    --input: 270 15% 88%;
+    --ring: 270 45% 30%;
+
+    --radius: 0.75rem;
+
+    --gold: 45 90% 55%;
+    --gold-light: 45 80% 75%;
+    --gold-dark: 45 80% 40%;
+    --purple-deep: 270 50% 18%;
+    --purple-rich: 270 45% 30%;
+    --purple-light: 270 30% 92%;
+
+    --sidebar-background: 270 50% 18%;
+    --sidebar-foreground: 45 100% 95%;
+    --sidebar-primary: 45 90% 55%;
+    --sidebar-primary-foreground: 270 50% 18%;
+    --sidebar-accent: 270 40% 25%;
+    --sidebar-accent-foreground: 45 100% 95%;
+    --sidebar-border: 270 40% 25%;
+    --sidebar-ring: 45 90% 55%;
+  }
+
+  .dark {
+    --background: 270 50% 6%;
+    --foreground: 45 30% 92%;
+
+    --card: 270 45% 10%;
+    --card-foreground: 45 30% 92%;
+
+    --popover: 270 45% 10%;
+    --popover-foreground: 45 30% 92%;
+
+    --primary: 45 90% 55%;
+    --primary-foreground: 270 50% 12%;
+
+    --secondary: 270 35% 22%;
+    --secondary-foreground: 45 30% 92%;
+
+    --muted: 270 35% 18%;
+    --muted-foreground: 270 15% 60%;
+
+    --accent: 45 80% 50%;
+    --accent-foreground: 270 50% 12%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 270 30% 18%;
+    --input: 270 30% 18%;
+    --ring: 45 90% 55%;
+
+    --sidebar-background: 270 50% 8%;
+    --sidebar-foreground: 45 100% 95%;
+    --sidebar-primary: 45 90% 55%;
+    --sidebar-primary-foreground: 270 50% 8%;
+    --sidebar-accent: 270 40% 15%;
+    --sidebar-accent-foreground: 45 100% 95%;
+    --sidebar-border: 270 40% 15%;
+    --sidebar-ring: 45 90% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    direction: rtl;
+  }
+
+  body {
+    @apply bg-background text-foreground font-tajawal;
+  }
+}

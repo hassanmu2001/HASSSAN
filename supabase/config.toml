@@ -1,0 +1,10 @@
+project_id = "xuztbunvlccuuhtvtbop"
+
+[functions.generate-description]
+verify_jwt = false
+
+[functions.smart-filter]
+verify_jwt = false
+
+[functions.send-booking-notification]
+verify_jwt = false
