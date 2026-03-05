@@ -1,4 +1,5 @@
 import { useState } from "react";
+import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -14,7 +15,7 @@ import { Heart, Plus, Trash2, Search, CheckCircle, Clock, CalendarHeart, Sparkle
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
-const statusConfig: Record<string, { label: string; icon: any; color: string }> = {
+const statusConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   searching: { label: "قيد البحث", icon: Search, color: "bg-accent/20 text-accent-foreground" },
   shortlisted: { label: "مختارة", icon: Sparkles, color: "bg-gold/20 text-gold-dark" },
   booked: { label: "تم الحجز", icon: CheckCircle, color: "bg-green-100 text-green-700" },
@@ -62,7 +63,7 @@ const WeddingList = () => {
       setPartnerName("");
       toast.success("تم إنشاء القائمة");
     },
-    onError: (err: any) => toast.error(err.message),
+    onError: (err: Error) => toast.error(err.message),
   });
 
   const deleteMutation = useMutation({
@@ -158,9 +159,9 @@ const WeddingList = () => {
             </CardContent></Card>
           ) : (
             <div className="space-y-6">
-              {lists.map((list: any) => {
+              {lists.map((list) => {
                 const items = list.wedding_list_items ?? [];
-                const booked = items.filter((i: any) => i.status === "booked").length;
+                const booked = items.filter((i) => i.status === "booked").length;
                 const progress = items.length > 0 ? Math.round((booked / items.length) * 100) : 0;
 
                 return (
@@ -197,7 +198,7 @@ const WeddingList = () => {
                         {/* Items */}
                         {items.length > 0 ? (
                           <div className="space-y-2">
-                            {items.map((item: any) => {
+                            {items.map((item) => {
                               const sc = statusConfig[item.status] ?? statusConfig.searching;
                               const StatusIcon = sc.icon;
                               return (

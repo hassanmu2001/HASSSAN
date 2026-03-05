@@ -59,7 +59,7 @@ const DashboardCoupons = () => {
       setForm({ code: "", description: "", discount_percent: 10, max_uses: "", season_label: "", expires_at: "" });
       toast.success("تم إنشاء الكوبون بنجاح!");
     },
-    onError: (err: any) => toast.error(err.message || "حدث خطأ"),
+    onError: (err: Error) => toast.error(err.message || "حدث خطأ"),
   });
 
   const toggleMutation = useMutation({

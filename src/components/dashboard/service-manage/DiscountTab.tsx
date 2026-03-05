@@ -10,7 +10,12 @@ import { toast } from "sonner";
 import { Percent, Sun, Wallet } from "lucide-react";
 
 interface Props {
-  service: any;
+  service: {
+    id: string;
+    discount_percent?: number | null;
+    weekend_price_increase?: number | null;
+    deposit_percent?: number | null;
+  };
 }
 
 const DiscountTab = ({ service }: Props) => {
@@ -52,7 +57,7 @@ const DiscountTab = ({ service }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["my-services"] });
       toast.success("تم حفظ إعدادات التسعير");
     },
-    onError: (err: any) => toast.error(err.message || "حدث خطأ"),
+    onError: (err: Error) => toast.error(err.message || "حدث خطأ"),
   });
 
   return (

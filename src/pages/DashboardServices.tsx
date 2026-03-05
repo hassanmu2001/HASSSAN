@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useCountry } from "@/hooks/use-country";
 import { useNavigate } from "react-router-dom";
+import type { Tables } from "@/integrations/supabase/types";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import ServiceForm from "@/components/dashboard/ServiceForm";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,7 @@ const DashboardServices = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
-  const [editingService, setEditingService] = useState<any>(null);
+  const [editingService, setEditingService] = useState<Tables<"services"> | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -62,7 +63,7 @@ const DashboardServices = () => {
     onError: () => toast.error("حدث خطأ أثناء الحذف"),
   });
 
-  const handleEdit = (service: any) => {
+  const handleEdit = (service: Tables<"services">) => {
     setEditingService(service);
     setShowForm(true);
   };

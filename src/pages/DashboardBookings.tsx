@@ -122,7 +122,7 @@ const DashboardBookings = () => {
           filter: `client_id=eq.${user.id}`,
         },
         (payload) => {
-          const newStatus = (payload.new as any).status;
+          const newStatus = (payload.new as Record<string, unknown>).status;
           if (newStatus === "confirmed") {
             toast.success("✅ تم تأكيد حجزك!");
           } else if (newStatus === "cancelled") {
@@ -212,7 +212,7 @@ const DashboardBookings = () => {
                   const sConfig = statusConfig[booking.status] ?? statusConfig.pending;
                   const depositPercent = booking.services?.deposit_percent ?? 0;
                   const depositAmount = depositPercent > 0 ? (booking.total * depositPercent / 100) : 0;
-                  const selectedOpts = (booking.selected_options as any[]) ?? [];
+                  const selectedOpts = (booking.selected_options as { name: string; option_id: string; quantity: number }[]) ?? [];
 
                   return (
                     <Card key={booking.id} className="border-border">
@@ -249,7 +249,7 @@ const DashboardBookings = () => {
                               </span>
                               {booking.guest_count && <span>👥 {booking.guest_count} ضيف</span>}
                               {selectedOpts.length > 0 && (
-                                <span>🏷️ {selectedOpts.map((o: any) => o.name).join(", ")}</span>
+                                <span>🏷️ {selectedOpts.map((o) => o.name).join(", ")}</span>
                               )}
                             </div>
 

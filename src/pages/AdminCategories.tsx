@@ -1,5 +1,5 @@
+import type { Tables } from "@/integrations/supabase/types";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -34,7 +34,7 @@ const AdminCategories = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [editingCategory, setEditingCategory] = useState<Tables<"categories"> | null>(null);
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
@@ -97,7 +97,7 @@ const AdminCategories = () => {
     onError: () => toast.error("لا يمكن حذف القسم (قد تكون هناك خدمات مرتبطة به)"),
   });
 
-  const openForm = (cat?: any) => {
+  const openForm = (cat?: Tables<"categories">) => {
     if (cat) {
       setEditingCategory(cat);
       setName(cat.name);
