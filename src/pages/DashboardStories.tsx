@@ -62,8 +62,8 @@ const DashboardStories = () => {
       queryClient.invalidateQueries({ queryKey: ["my-stories"] });
       setCaption("");
       toast.success("تم نشر القصة!");
-    } catch (err: any) {
-      toast.error(err.message || "حدث خطأ");
+    } catch (err: unknown) {
+      toast.error((err instanceof Error ? err.message : null) || "حدث خطأ");
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";

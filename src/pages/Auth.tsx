@@ -198,8 +198,8 @@ const Auth = () => {
         toast.success("تم تسجيل الدخول بنجاح!");
         navigate("/");
       }
-    } catch (error: any) {
-      toast.error(error.message || "حدث خطأ، حاول مرة أخرى");
+    } catch (error: unknown) {
+      toast.error((error instanceof Error ? error.message : null) || "حدث خطأ، حاول مرة أخرى");
     } finally {
       setLoading(false);
     }

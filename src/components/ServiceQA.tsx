@@ -14,6 +14,17 @@ interface ServiceQAProps {
   providerId: string;
 }
 
+interface ServiceQuestion {
+  id: string;
+  asker_id: string;
+  question: string;
+  answer: string | null;
+  answered_at: string | null;
+  created_at: string;
+  service_id: string;
+  askerName: string;
+}
+
 const ServiceQA = ({ serviceId, providerId }: ServiceQAProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -56,7 +67,7 @@ const ServiceQA = ({ serviceId, providerId }: ServiceQAProps) => {
       setQuestion("");
       toast.success("تم إرسال سؤالك");
     },
-    onError: (err: any) => toast.error(err.message),
+    onError: (err: Error) => toast.error(err.message),
   });
 
   const answerMutation = useMutation({
@@ -106,7 +117,7 @@ const ServiceQA = ({ serviceId, providerId }: ServiceQAProps) => {
         <p className="text-muted-foreground text-center py-4 text-sm">لا توجد أسئلة بعد. كن أول من يسأل!</p>
       ) : (
         <div className="space-y-4">
-          {questions.map((q: any) => (
+          {questions.map((q: ServiceQuestion) => (
             <QAItem
               key={q.id}
               q={q}
@@ -120,7 +131,7 @@ const ServiceQA = ({ serviceId, providerId }: ServiceQAProps) => {
   );
 };
 
-const QAItem = ({ q, isProvider, onAnswer }: { q: any; isProvider: boolean; onAnswer: (a: string) => void }) => {
+const QAItem = ({ q, isProvider, onAnswer }: { q: ServiceQuestion; isProvider: boolean; onAnswer: (a: string) => void }) => {
   const [answerText, setAnswerText] = useState("");
   const [showForm, setShowForm] = useState(false);
 

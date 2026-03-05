@@ -151,7 +151,7 @@ const CategoryPage = () => {
         providerCity: profile?.city ?? s.city ?? "",
         avgRating: rating ? rating.sum / rating.count : 0,
         reviewCount: rating?.count ?? 0,
-        adminRating: (s as any).admin_rating as number | null,
+        adminRating: s.admin_rating,
       };
     });
   }, [services, profileMap, ratingMap]);
@@ -196,8 +196,8 @@ const CategoryPage = () => {
         setAiReason(data.reason ?? "");
         toast.success(t("category_page.ai_button"));
       }
-    } catch (err: any) {
-      toast.error(err.message || t("common.error"));
+    } catch (err: unknown) {
+      toast.error((err instanceof Error ? err.message : null) || t("common.error"));
       setSortBy("rating");
     } finally {
       setAiLoading(false);
@@ -346,7 +346,7 @@ const CategoryPage = () => {
 
             {/* City filter moved below as grid */}
 
-            <Select value={sortBy} onValueChange={(v) => { setSortBy(v as any); setAiSortedIds(null); }}>
+            <Select value={sortBy} onValueChange={(v) => { setSortBy(v as "rating" | "admin_rating" | "price_low" | "price_high"); setAiSortedIds(null); }}>
               <SelectTrigger className="w-full md:w-48">
                 <SlidersHorizontal className="w-4 h-4 ml-2 text-muted-foreground" />
                 <SelectValue placeholder="ترتيب حسب" />

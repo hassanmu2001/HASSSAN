@@ -1,5 +1,16 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+interface ServicePayload {
+  id: string;
+  title: string;
+  description?: string;
+  price_min?: number | null;
+  price_max?: number | null;
+  avgRating?: number;
+  adminRating?: number | null;
+  city?: string;
+}
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -10,11 +21,11 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { query, services } = await req.json();
+    const { query, services } = await req.json() as { query: string; services: ServicePayload[] };
 
     if (!query || !services || services.length === 0) {
       return new Response(
-        JSON.stringify({ sortedIds: services?.map((s: any) => s.id) ?? [] }),
+        JSON.stringify({ sortedIds: services?.map((s: ServicePayload) => s.id) ?? [] }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -24,7 +35,7 @@ serve(async (req) => {
 
     const servicesSummary = services
       .map(
-        (s: any) =>
+        (s: ServicePayload) =>
           `ID:${s.id}|${s.title}|${s.description?.slice(0, 80)}|سعر:${s.price_min ?? "?"}-${s.price_max ?? "?"}|تقييم_مستخدمين:${s.avgRating?.toFixed(1) ?? "0"}|تقييم_مشرف:${s.adminRating ?? "لا يوجد"}|مدينة:${s.city ?? "غير محدد"}`
       )
       .join("\n");
@@ -92,7 +103,7 @@ serve(async (req) => {
       const t = await response.text();
       console.error("AI error:", response.status, t);
       return new Response(
-        JSON.stringify({ sortedIds: services.map((s: any) => s.id) }),
+        JSON.stringify({ sortedIds: services.map((s: ServicePayload) => s.id) }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -107,7 +118,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ sortedIds: services.map((s: any) => s.id) }),
+      JSON.stringify({ sortedIds: services.map((s: ServicePayload) => s.id) }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {

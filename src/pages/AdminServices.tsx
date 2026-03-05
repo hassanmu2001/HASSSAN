@@ -90,7 +90,7 @@ const AdminServices = () => {
     mutationFn: async ({ id, rating }: { id: string; rating: number }) => {
       const { error } = await supabase
         .from("services")
-        .update({ admin_rating: rating } as any)
+        .update({ admin_rating: rating })
         .eq("id", id);
       if (error) throw error;
     },
@@ -189,7 +189,7 @@ const AdminServices = () => {
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           {service.categories && (
                             <Badge variant="outline" className="text-xs">
-                              {(service.categories as any).name}
+                              {(service.categories as { name: string } | null)?.name}
                             </Badge>
                           )}
                           {service.city && <span>{service.city}</span>}
@@ -213,7 +213,7 @@ const AdminServices = () => {
                               >
                                 <Star
                                   className={`w-4 h-4 ${
-                                    star <= ((service as any).admin_rating ?? 0)
+                                    star <= (service.admin_rating ?? 0)
                                       ? "fill-gold text-gold"
                                       : "text-muted-foreground/30 hover:text-gold/50"
                                   }`}

@@ -93,7 +93,7 @@ const Favorites = () => {
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start mb-2">
                         <div className="min-w-0 flex-1">
-                          <p className="text-xs text-gold mb-1">{(service as any).categories?.name}</p>
+                          <p className="text-xs text-gold mb-1">{(service.categories as { name: string } | null)?.name}</p>
                           <h3 className="font-bold text-foreground truncate">{service.title}</h3>
                           <p className="text-sm text-muted-foreground">{service.providerName}</p>
                         </div>

@@ -174,7 +174,7 @@ const Dashboard = () => {
                       <div key={b.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                         <div className="min-w-0">
                           <p className="font-bold text-foreground text-sm truncate">
-                            {(b as any).services?.title ?? "خدمة"}
+                            {(b as { services?: { title?: string } }).services?.title ?? "خدمة"}
                           </p>
                           <p className="text-muted-foreground text-xs">{new Date(b.booking_date).toLocaleDateString("ar")}</p>
                         </div>
