@@ -11,6 +11,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Star, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 
+interface FavoriteService {
+  id: string;
+  title: string;
+  price_min?: number | null;
+  rating?: number | null;
+  categories?: { name?: string } | null;
+  providerName: string;
+}
+
 const Favorites = () => {
   const { user } = useAuth();
   const { favorites } = useFavorites();
@@ -38,7 +47,7 @@ const Favorites = () => {
       return data.map((s) => ({
         ...s,
         providerName: profileMap.get(s.provider_id)?.full_name ?? "مزود",
-      }));
+      })) as unknown as FavoriteService[];
     },
     enabled: favorites.length > 0,
   });
@@ -93,7 +102,7 @@ const Favorites = () => {
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start mb-2">
                         <div className="min-w-0 flex-1">
-                          <p className="text-xs text-gold mb-1">{(service as any).categories?.name}</p>
+                          <p className="text-xs text-gold mb-1">{service.categories?.name}</p>
                           <h3 className="font-bold text-foreground truncate">{service.title}</h3>
                           <p className="text-sm text-muted-foreground">{service.providerName}</p>
                         </div>

@@ -20,6 +20,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Search, Check, X, Star, Shield } from "lucide-react";
 
+interface AdminServiceItem {
+  id: string;
+  title: string;
+  description?: string | null;
+  photos?: string[] | null;
+  city?: string | null;
+  price_min?: number | null;
+  is_approved?: boolean;
+  provider_id: string;
+  admin_rating?: number | null;
+  categories?: { name?: string } | null;
+}
+
 const AdminServices = () => {
   const { user, loading: authLoading } = useAuth();
   const { formatPrice } = useCountry();
@@ -50,7 +63,7 @@ const AdminServices = () => {
         .select("*, categories(name)")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data;
+      return data as unknown as AdminServiceItem[];
     },
     enabled: isAdmin === true,
   });
@@ -90,7 +103,7 @@ const AdminServices = () => {
     mutationFn: async ({ id, rating }: { id: string; rating: number }) => {
       const { error } = await supabase
         .from("services")
-        .update({ admin_rating: rating } as any)
+        .update({ admin_rating: rating } as Record<string, unknown>)
         .eq("id", id);
       if (error) throw error;
     },
@@ -189,7 +202,7 @@ const AdminServices = () => {
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           {service.categories && (
                             <Badge variant="outline" className="text-xs">
-                              {(service.categories as any).name}
+                              {service.categories?.name}
                             </Badge>
                           )}
                           {service.city && <span>{service.city}</span>}
@@ -213,7 +226,7 @@ const AdminServices = () => {
                               >
                                 <Star
                                   className={`w-4 h-4 ${
-                                    star <= ((service as any).admin_rating ?? 0)
+                                    star <= (service.admin_rating ?? 0)
                                       ? "fill-gold text-gold"
                                       : "text-muted-foreground/30 hover:text-gold/50"
                                   }`}

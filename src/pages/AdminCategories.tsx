@@ -29,12 +29,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  icon?: string | null;
+}
+
 const AdminCategories = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
@@ -97,7 +105,7 @@ const AdminCategories = () => {
     onError: () => toast.error("لا يمكن حذف القسم (قد تكون هناك خدمات مرتبطة به)"),
   });
 
-  const openForm = (cat?: any) => {
+  const openForm = (cat?: Category) => {
     if (cat) {
       setEditingCategory(cat);
       setName(cat.name);

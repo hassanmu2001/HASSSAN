@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useCountry } from "@/hooks/use-country";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import ServiceForm from "@/components/dashboard/ServiceForm";
+import ServiceForm, { ServiceData } from "@/components/dashboard/ServiceForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,7 +30,7 @@ const DashboardServices = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
-  const [editingService, setEditingService] = useState<any>(null);
+  const [editingService, setEditingService] = useState<ServiceData | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -62,7 +62,7 @@ const DashboardServices = () => {
     onError: () => toast.error("حدث خطأ أثناء الحذف"),
   });
 
-  const handleEdit = (service: any) => {
+  const handleEdit = (service: ServiceData) => {
     setEditingService(service);
     setShowForm(true);
   };

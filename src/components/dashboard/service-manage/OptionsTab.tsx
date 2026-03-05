@@ -26,6 +26,20 @@ interface PriceTierForm {
   price_per_unit: number;
 }
 
+interface PriceTier {
+  id: string;
+  min_quantity: number;
+  max_quantity: number | null;
+  price_per_unit: number;
+}
+
+interface ServiceOption {
+  id: string;
+  name: string;
+  description?: string | null;
+  service_price_tiers?: PriceTier[];
+}
+
 const OptionsTab = ({ serviceId }: Props) => {
   const queryClient = useQueryClient();
   const { selectedCountry } = useCountry();
@@ -151,7 +165,7 @@ const OptionsTab = ({ serviceId }: Props) => {
           لا توجد أصناف بعد. أضف أصنافاً لتحديد شرائح الأسعار.
         </p>
       ) : (
-        options.map((option: any) => (
+        options.map((option: ServiceOption) => (
           <OptionCard
             key={option.id}
             option={option}
@@ -168,7 +182,7 @@ const OptionsTab = ({ serviceId }: Props) => {
 };
 
 interface OptionCardProps {
-  option: any;
+  option: ServiceOption;
   isOpen: boolean;
   onToggle: () => void;
   onDelete: () => void;
@@ -249,8 +263,8 @@ const OptionCard = ({ option, isOpen, onToggle, onDelete, onAddTier, onDeleteTie
                   </thead>
                   <tbody>
                     {tiers
-                      .sort((a: any, b: any) => a.min_quantity - b.min_quantity)
-                      .map((tier: any) => (
+                      .sort((a: PriceTier, b: PriceTier) => a.min_quantity - b.min_quantity)
+                      .map((tier: PriceTier) => (
                         <tr key={tier.id} className="border-t border-border">
                           <td className="p-2.5">{tier.min_quantity}</td>
                           <td className="p-2.5">{tier.max_quantity ?? "∞"}</td>

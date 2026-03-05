@@ -17,6 +17,13 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 
+interface PriceTier {
+  id: string;
+  min_quantity: number;
+  max_quantity: number | null;
+  price_per_unit: number;
+}
+
 interface ServiceBookingDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -104,9 +111,9 @@ const ServiceBookingDialog = ({
 
     // Find the matching tier
     const tier = tiers
-      .sort((a: any, b: any) => a.min_quantity - b.min_quantity)
+      .sort((a: PriceTier, b: PriceTier) => a.min_quantity - b.min_quantity)
       .find(
-        (t: any) => qty >= t.min_quantity && (t.max_quantity === null || qty <= t.max_quantity)
+        (t: PriceTier) => qty >= t.min_quantity && (t.max_quantity === null || qty <= t.max_quantity)
       );
 
     if (!tier) {
@@ -135,7 +142,7 @@ const ServiceBookingDialog = ({
   const total = afterWeekend - discountAmount;
 
   const hasQuantityTiers = options?.some(
-    (o) => (o.service_price_tiers?.length ?? 0) > 0 && o.service_price_tiers?.some((t: any) => t.max_quantity !== t.min_quantity)
+    (o) => (o.service_price_tiers?.length ?? 0) > 0 && o.service_price_tiers?.some((t: PriceTier) => t.max_quantity !== t.min_quantity)
   );
 
   const bookMutation = useMutation({
@@ -215,7 +222,7 @@ const ServiceBookingDialog = ({
         }
       }
     },
-    onError: (err: any) => toast.error(err.message || "حدث خطأ أثناء الحجز"),
+    onError: (err: Error) => toast.error(err.message || "حدث خطأ أثناء الحجز"),
   });
 
   const resetForm = () => {
@@ -299,8 +306,8 @@ const ServiceBookingDialog = ({
                         {opt.service_price_tiers && opt.service_price_tiers.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mt-2">
                             {opt.service_price_tiers
-                              .sort((a: any, b: any) => a.min_quantity - b.min_quantity)
-                              .map((tier: any) => (
+                              .sort((a: PriceTier, b: PriceTier) => a.min_quantity - b.min_quantity)
+                              .map((tier: PriceTier) => (
                                 <Badge
                                   key={tier.id}
                                   variant="outline"

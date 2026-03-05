@@ -20,13 +20,29 @@ import {
 import { toast } from "sonner";
 import { Search, CheckCircle, XCircle, Eye, ShieldCheck, Clock, User } from "lucide-react";
 
+interface VerificationProfile {
+  id: string;
+  user_id?: string;
+  full_name?: string;
+  city?: string;
+  phone?: string;
+  date_of_birth?: string;
+  national_id?: string;
+  business_name?: string;
+  business_address?: string;
+  id_photo_url?: string;
+  verification_notes?: string;
+  avatar_url?: string;
+  is_verified?: boolean;
+}
+
 const AdminVerification = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"pending" | "verified" | "all">("pending");
-  const [selectedProfile, setSelectedProfile] = useState<any>(null);
+  const [selectedProfile, setSelectedProfile] = useState<VerificationProfile | null>(null);
   const [rejectReason, setRejectReason] = useState("");
   const [idPhotoSignedUrl, setIdPhotoSignedUrl] = useState<string | null>(null);
   const [showRejectDialog, setShowRejectDialog] = useState(false);

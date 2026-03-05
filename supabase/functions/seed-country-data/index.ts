@@ -375,7 +375,7 @@ Deno.serve(async (req) => {
 
     // Action: seed_all - seed all countries except SA
     if (action === "seed_all") {
-      const results: Record<string, any> = {};
+      const results: Record<string, unknown> = {};
       const countryCodes = Object.keys(COUNTRY_NAMES);
       for (const code of countryCodes) {
         if (code === "SA") continue; // skip SA

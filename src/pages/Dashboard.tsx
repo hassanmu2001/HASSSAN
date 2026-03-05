@@ -18,6 +18,13 @@ const STATUS_MAP: Record<string, { label: string; variant: "default" | "secondar
   completed: { label: "مكتمل", variant: "outline" },
 };
 
+interface BookingSummary {
+  id: string;
+  status: string;
+  booking_date: string;
+  services?: { title?: string } | null;
+}
+
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const { formatPrice } = useCountry();
@@ -60,7 +67,7 @@ const Dashboard = () => {
         .order("created_at", { ascending: false })
         .limit(5);
       if (error) throw error;
-      return data;
+      return data as unknown as BookingSummary[];
     },
     enabled: !!user,
   });
@@ -174,7 +181,7 @@ const Dashboard = () => {
                       <div key={b.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                         <div className="min-w-0">
                           <p className="font-bold text-foreground text-sm truncate">
-                            {(b as any).services?.title ?? "خدمة"}
+                           {b.services?.title ?? "خدمة"}
                           </p>
                           <p className="text-muted-foreground text-xs">{new Date(b.booking_date).toLocaleDateString("ar")}</p>
                         </div>

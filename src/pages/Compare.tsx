@@ -10,6 +10,21 @@ import { Scale, Star, MapPin, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
+interface ComparedService {
+  id: string;
+  title: string;
+  provider_id: string;
+  price_min?: number | null;
+  price_max?: number | null;
+  deposit_percent?: number | null;
+  discount_percent?: number | null;
+  categories?: { name?: string } | null;
+  providerName: string;
+  providerCity: string;
+  avgRating: number;
+  reviewCount: number;
+}
+
 const Compare = () => {
   const [searchParams] = useSearchParams();
   const ids = searchParams.get("ids")?.split(",").filter(Boolean) ?? [];
@@ -62,14 +77,14 @@ const Compare = () => {
   });
 
   const rows = [
-    { label: "المزود", render: (s: any) => s.providerName },
-    { label: "المدينة", render: (s: any) => s.providerCity || "—" },
-    { label: "التقييم", render: (s: any) => s.avgRating > 0 ? `${s.avgRating.toFixed(1)} ⭐ (${s.reviewCount})` : "لا تقييمات" },
-    { label: "السعر من", render: (s: any) => formatPrice(s.price_min ?? 0) },
-    { label: "السعر إلى", render: (s: any) => s.price_max ? formatPrice(s.price_max) : "—" },
-    { label: "العربون", render: (s: any) => s.deposit_percent ? `${s.deposit_percent}%` : "—" },
-    { label: "الخصم", render: (s: any) => s.discount_percent ? `${s.discount_percent}%` : "—" },
-    { label: "الفئة", render: (s: any) => (s as any).categories?.name ?? "—" },
+    { label: "المزود", render: (s: ComparedService) => s.providerName },
+    { label: "المدينة", render: (s: ComparedService) => s.providerCity || "—" },
+    { label: "التقييم", render: (s: ComparedService) => s.avgRating > 0 ? `${s.avgRating.toFixed(1)} ⭐ (${s.reviewCount})` : "لا تقييمات" },
+    { label: "السعر من", render: (s: ComparedService) => formatPrice(s.price_min ?? 0) },
+    { label: "السعر إلى", render: (s: ComparedService) => s.price_max ? formatPrice(s.price_max) : "—" },
+    { label: "العربون", render: (s: ComparedService) => s.deposit_percent ? `${s.deposit_percent}%` : "—" },
+    { label: "الخصم", render: (s: ComparedService) => s.discount_percent ? `${s.discount_percent}%` : "—" },
+    { label: "الفئة", render: (s: ComparedService) => s.categories?.name ?? "—" },
   ];
 
   return (
