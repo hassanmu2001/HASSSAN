@@ -17,8 +17,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { X, Upload, ArrowRight, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
+type ServiceData = {
+  id: string;
+  title: string;
+  description: string;
+  category_id: string | null;
+  city: string | null;
+  price_min: number | null;
+  price_max: number | null;
+  photos: string[] | null;
+};
+
 interface ServiceFormProps {
-  service?: any;
+  service?: ServiceData;
   onClose: () => void;
   userId: string;
 }
@@ -102,8 +113,8 @@ const ServiceForm = ({ service, onClose, userId }: ServiceFormProps) => {
         setDescription(data.description);
         toast.success("تم توليد الوصف بنجاح!");
       }
-    } catch (err: any) {
-      toast.error(err.message || "حدث خطأ أثناء توليد الوصف");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "حدث خطأ أثناء توليد الوصف");
     } finally {
       setGeneratingDesc(false);
     }

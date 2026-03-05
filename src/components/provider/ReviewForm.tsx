@@ -103,7 +103,7 @@ const ReviewForm = ({ services, providerId }: ReviewFormProps) => {
       setMediaFiles([]);
       setMediaPreviews([]);
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       toast.error(err.message || "حدث خطأ أثناء إرسال التقييم");
     },
   });

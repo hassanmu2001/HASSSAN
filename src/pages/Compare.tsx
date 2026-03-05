@@ -10,6 +10,24 @@ import { Scale, Star, MapPin, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
+type EnrichedService = {
+  id: string;
+  title: string;
+  description: string;
+  city: string | null;
+  price_min: number | null;
+  price_max: number | null;
+  deposit_percent: number | null;
+  discount_percent: number | null;
+  provider_id: string;
+  photos: string[] | null;
+  categories: { name: string } | null;
+  providerName: string;
+  providerCity: string;
+  avgRating: number;
+  reviewCount: number;
+};
+
 const Compare = () => {
   const [searchParams] = useSearchParams();
   const ids = searchParams.get("ids")?.split(",").filter(Boolean) ?? [];
@@ -51,25 +69,26 @@ const Compare = () => {
         const rating = ratingMap.get(s.id);
         return {
           ...s,
+          categories: s.categories as { name: string } | null,
           providerName: profile?.full_name ?? "مزود",
           providerCity: profile?.city ?? s.city ?? "",
           avgRating: rating ? rating.sum / rating.count : 0,
           reviewCount: rating?.count ?? 0,
-        };
+        } as EnrichedService;
       });
     },
     enabled: ids.length >= 2,
   });
 
-  const rows = [
-    { label: "المزود", render: (s: any) => s.providerName },
-    { label: "المدينة", render: (s: any) => s.providerCity || "—" },
-    { label: "التقييم", render: (s: any) => s.avgRating > 0 ? `${s.avgRating.toFixed(1)} ⭐ (${s.reviewCount})` : "لا تقييمات" },
-    { label: "السعر من", render: (s: any) => formatPrice(s.price_min ?? 0) },
-    { label: "السعر إلى", render: (s: any) => s.price_max ? formatPrice(s.price_max) : "—" },
-    { label: "العربون", render: (s: any) => s.deposit_percent ? `${s.deposit_percent}%` : "—" },
-    { label: "الخصم", render: (s: any) => s.discount_percent ? `${s.discount_percent}%` : "—" },
-    { label: "الفئة", render: (s: any) => (s as any).categories?.name ?? "—" },
+  const rows: { label: string; render: (s: EnrichedService) => string }[] = [
+    { label: "المزود", render: (s) => s.providerName },
+    { label: "المدينة", render: (s) => s.providerCity || "—" },
+    { label: "التقييم", render: (s) => s.avgRating > 0 ? `${s.avgRating.toFixed(1)} ⭐ (${s.reviewCount})` : "لا تقييمات" },
+    { label: "السعر من", render: (s) => formatPrice(s.price_min ?? 0) },
+    { label: "السعر إلى", render: (s) => s.price_max ? formatPrice(s.price_max) : "—" },
+    { label: "العربون", render: (s) => s.deposit_percent ? `${s.deposit_percent}%` : "—" },
+    { label: "الخصم", render: (s) => s.discount_percent ? `${s.discount_percent}%` : "—" },
+    { label: "الفئة", render: (s) => s.categories?.name ?? "—" },
   ];
 
   return (

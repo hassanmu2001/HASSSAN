@@ -9,6 +9,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { MessageCircleQuestion, Send, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
+type ServiceQuestion = {
+  id: string;
+  question: string;
+  answer: string | null;
+  created_at: string;
+  asker_id: string;
+  askerName: string;
+};
+
 interface ServiceQAProps {
   serviceId: string;
   providerId: string;
@@ -31,13 +40,13 @@ const ServiceQA = ({ serviceId, providerId }: ServiceQAProps) => {
 
       // Fetch asker profiles
       const askerIds = [...new Set(data.map((q) => q.asker_id))];
-      if (askerIds.length === 0) return data.map((q) => ({ ...q, askerName: "مستخدم" }));
+      if (askerIds.length === 0) return data.map((q) => ({ ...q, askerName: "مستخدم" })) as ServiceQuestion[];
       const { data: profiles } = await supabase
         .from("profiles")
         .select("user_id, full_name")
         .in("user_id", askerIds);
       const profileMap = new Map((profiles ?? []).map((p) => [p.user_id, p.full_name]));
-      return data.map((q) => ({ ...q, askerName: profileMap.get(q.asker_id) ?? "مستخدم" }));
+      return data.map((q) => ({ ...q, askerName: profileMap.get(q.asker_id) ?? "مستخدم" })) as ServiceQuestion[];
     },
   });
 
@@ -56,7 +65,7 @@ const ServiceQA = ({ serviceId, providerId }: ServiceQAProps) => {
       setQuestion("");
       toast.success("تم إرسال سؤالك");
     },
-    onError: (err: any) => toast.error(err.message),
+    onError: (err: Error) => toast.error(err.message),
   });
 
   const answerMutation = useMutation({
@@ -106,7 +115,7 @@ const ServiceQA = ({ serviceId, providerId }: ServiceQAProps) => {
         <p className="text-muted-foreground text-center py-4 text-sm">لا توجد أسئلة بعد. كن أول من يسأل!</p>
       ) : (
         <div className="space-y-4">
-          {questions.map((q: any) => (
+          {questions.map((q) => (
             <QAItem
               key={q.id}
               q={q}
@@ -120,7 +129,7 @@ const ServiceQA = ({ serviceId, providerId }: ServiceQAProps) => {
   );
 };
 
-const QAItem = ({ q, isProvider, onAnswer }: { q: any; isProvider: boolean; onAnswer: (a: string) => void }) => {
+const QAItem = ({ q, isProvider, onAnswer }: { q: ServiceQuestion; isProvider: boolean; onAnswer: (a: string) => void }) => {
   const [answerText, setAnswerText] = useState("");
   const [showForm, setShowForm] = useState(false);
 
