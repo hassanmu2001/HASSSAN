@@ -24,13 +24,27 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+type ServiceRow = {
+  id: string;
+  title: string;
+  description: string;
+  category_id: string | null;
+  city: string | null;
+  price_min: number | null;
+  price_max: number | null;
+  photos: string[] | null;
+  is_approved: boolean | null;
+  is_active: boolean | null;
+  categories: { name: string } | null;
+};
+
 const DashboardServices = () => {
   const { user, loading: authLoading } = useAuth();
   const { formatPrice } = useCountry();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
-  const [editingService, setEditingService] = useState<any>(null);
+  const [editingService, setEditingService] = useState<ServiceRow | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -45,7 +59,7 @@ const DashboardServices = () => {
         .eq("provider_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data;
+      return data as ServiceRow[];
     },
     enabled: !!user,
   });
@@ -62,7 +76,7 @@ const DashboardServices = () => {
     onError: () => toast.error("حدث خطأ أثناء الحذف"),
   });
 
-  const handleEdit = (service: any) => {
+  const handleEdit = (service: ServiceRow) => {
     setEditingService(service);
     setShowForm(true);
   };

@@ -13,8 +13,24 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Heart, Plus, Trash2, Search, CheckCircle, Clock, CalendarHeart, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import type { ElementType } from "react";
 
-const statusConfig: Record<string, { label: string; icon: any; color: string }> = {
+type WeddingListItem = {
+  id: string;
+  status: string;
+  category_name: string | null;
+  services: { title: string; photos: string[] | null; price_min: number | null } | null;
+};
+
+type WeddingList = {
+  id: string;
+  title: string;
+  partner_name: string | null;
+  wedding_date: string | null;
+  wedding_list_items: WeddingListItem[];
+};
+
+const statusConfig: Record<string, { label: string; icon: ElementType; color: string }> = {
   searching: { label: "قيد البحث", icon: Search, color: "bg-accent/20 text-accent-foreground" },
   shortlisted: { label: "مختارة", icon: Sparkles, color: "bg-gold/20 text-gold-dark" },
   booked: { label: "تم الحجز", icon: CheckCircle, color: "bg-green-100 text-green-700" },
@@ -38,7 +54,7 @@ const WeddingList = () => {
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data;
+      return data as WeddingList[];
     },
     enabled: !!user,
   });
@@ -62,7 +78,7 @@ const WeddingList = () => {
       setPartnerName("");
       toast.success("تم إنشاء القائمة");
     },
-    onError: (err: any) => toast.error(err.message),
+    onError: (err: Error) => toast.error(err.message),
   });
 
   const deleteMutation = useMutation({
@@ -158,9 +174,9 @@ const WeddingList = () => {
             </CardContent></Card>
           ) : (
             <div className="space-y-6">
-              {lists.map((list: any) => {
+              {lists.map((list) => {
                 const items = list.wedding_list_items ?? [];
-                const booked = items.filter((i: any) => i.status === "booked").length;
+                const booked = items.filter((i) => i.status === "booked").length;
                 const progress = items.length > 0 ? Math.round((booked / items.length) * 100) : 0;
 
                 return (
@@ -197,7 +213,7 @@ const WeddingList = () => {
                         {/* Items */}
                         {items.length > 0 ? (
                           <div className="space-y-2">
-                            {items.map((item: any) => {
+                            {items.map((item) => {
                               const sc = statusConfig[item.status] ?? statusConfig.searching;
                               const StatusIcon = sc.icon;
                               return (

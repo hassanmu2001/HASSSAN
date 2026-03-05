@@ -62,8 +62,8 @@ const DashboardPortfolio = () => {
       setOpen(false);
       setTitle("");
       setFile(null);
-    } catch (err: any) {
-      toast.error(err.message || "حدث خطأ");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "حدث خطأ");
     } finally {
       setUploading(false);
     }

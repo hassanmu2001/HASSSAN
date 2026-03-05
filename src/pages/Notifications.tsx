@@ -18,7 +18,7 @@ interface Notification {
   type: string;
   is_read: boolean;
   created_at: string;
-  metadata: any;
+  metadata: Record<string, unknown> | null;
 }
 
 const TYPE_LABELS: Record<string, string> = {
