@@ -41,7 +41,7 @@ export function useFavorites() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["favorites"] });
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       toast.error(err.message || "حدث خطأ");
     },
   });

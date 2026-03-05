@@ -9,8 +9,15 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Percent, Sun, Wallet } from "lucide-react";
 
+interface ServicePricing {
+  id: string;
+  discount_percent?: number;
+  weekend_price_increase?: number;
+  deposit_percent?: number;
+}
+
 interface Props {
-  service: any;
+  service: ServicePricing;
 }
 
 const DiscountTab = ({ service }: Props) => {
@@ -52,7 +59,7 @@ const DiscountTab = ({ service }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["my-services"] });
       toast.success("تم حفظ إعدادات التسعير");
     },
-    onError: (err: any) => toast.error(err.message || "حدث خطأ"),
+    onError: (err: Error) => toast.error(err.message || "حدث خطأ"),
   });
 
   return (

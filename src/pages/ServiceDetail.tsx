@@ -17,6 +17,28 @@ import ReviewForm from "@/components/provider/ReviewForm";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import ServiceQA from "@/components/ServiceQA";
 
+interface Review {
+  id: string;
+  rating: number;
+  comment?: string | null;
+  created_at: string;
+  profiles?: { full_name?: string; avatar_url?: string } | null;
+}
+
+interface PriceTier {
+  id: string;
+  min_quantity: number;
+  max_quantity: number | null;
+  price_per_unit: number;
+}
+
+interface ServiceOption {
+  id: string;
+  name: string;
+  description?: string | null;
+  service_price_tiers?: PriceTier[];
+}
+
 const ServiceDetail = () => {
   const { serviceId } = useParams<{ serviceId: string }>();
   const { user } = useAuth();
@@ -212,7 +234,7 @@ const ServiceDetail = () => {
                 <div>
                   <h2 className="font-amiri text-xl font-bold text-foreground mb-4">الأصناف والأسعار</h2>
                   <div className="space-y-3">
-                    {options.map((opt: any) => (
+                    {options.map((opt: ServiceOption) => (
                       <button
                         key={opt.id}
                         onClick={() => {
@@ -233,8 +255,8 @@ const ServiceDetail = () => {
                         {opt.service_price_tiers?.length > 0 && (
                           <div className="flex flex-wrap gap-2 justify-end">
                             {opt.service_price_tiers
-                              .sort((a: any, b: any) => a.min_quantity - b.min_quantity)
-                              .map((tier: any) => (
+                              .sort((a: PriceTier, b: PriceTier) => a.min_quantity - b.min_quantity)
+                              .map((tier: PriceTier) => (
                                 <Badge key={tier.id} variant="outline" className="text-xs">
                                   {tier.max_quantity
                                     ? `${tier.min_quantity}-${tier.max_quantity}`
@@ -261,7 +283,7 @@ const ServiceDetail = () => {
                 <p className="text-muted-foreground text-center py-6">لا توجد تقييمات بعد</p>
               ) : (
                 <div className="space-y-4">
-                  {reviews.map((review: any) => {
+                  {reviews.map((review: Review) => {
                     const name = review.profiles?.full_name ?? "مستخدم";
                     const initials = name.split(" ").map((n: string) => n[0]).join("").slice(0, 2);
                     return (

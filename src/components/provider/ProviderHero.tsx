@@ -64,7 +64,7 @@ const ProviderHero = ({ profile, avgRating, reviewCount }: ProviderHeroProps) =>
 
       if (error) throw error;
       navigate(`/messages?conv=${newConv.id}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error("حدث خطأ أثناء بدء المحادثة");
     } finally {
       setLoading(false);

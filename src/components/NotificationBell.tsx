@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ const NotificationBell = ({ userId }: { userId: string }) => {
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     const { data } = await supabase
       .from("notifications")
       .select("*")
@@ -37,7 +37,7 @@ const NotificationBell = ({ userId }: { userId: string }) => {
       .order("created_at", { ascending: false })
       .limit(20);
     if (data) setNotifications(data);
-  };
+  }, [userId]);
 
   useEffect(() => {
     fetchNotifications();
@@ -61,7 +61,7 @@ const NotificationBell = ({ userId }: { userId: string }) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [userId]);
+  }, [userId, fetchNotifications]);
 
   const markAllRead = async () => {
     await supabase

@@ -31,6 +31,8 @@ const iconMap: Record<string, React.ElementType> = {
   Building2, UtensilsCrossed, Flower2, Music, PartyPopper, Camera, Car, Sparkles: SparklesIcon2, Mail, Cake, Sparkle, ClipboardList, Gamepad2, Gift, Printer,
 };
 
+type SortBy = "rating" | "admin_rating" | "price_low" | "price_high" | "ai";
+
 const CategoryPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ const CategoryPage = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [cityFilter, setCityFilter] = useState("all");
-  const [sortBy, setSortBy] = useState<"rating" | "admin_rating" | "price_low" | "price_high" | "ai">("rating");
+  const [sortBy, setSortBy] = useState<SortBy>("rating");
   const [minRating, setMinRating] = useState(0);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000]);
   const [showFilters, setShowFilters] = useState(false);
@@ -151,10 +153,10 @@ const CategoryPage = () => {
         providerCity: profile?.city ?? s.city ?? "",
         avgRating: rating ? rating.sum / rating.count : 0,
         reviewCount: rating?.count ?? 0,
-        adminRating: (s as any).admin_rating as number | null,
+        adminRating: (s as { admin_rating?: number }).admin_rating ?? null,
       };
     });
-  }, [services, profileMap, ratingMap]);
+  }, [services, profileMap, ratingMap, t]);
 
   // Use country cities for filter
   const cities = useMemo(() => {
@@ -196,13 +198,13 @@ const CategoryPage = () => {
         setAiReason(data.reason ?? "");
         toast.success(t("category_page.ai_button"));
       }
-    } catch (err: any) {
-      toast.error(err.message || t("common.error"));
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : t("common.error"));
       setSortBy("rating");
     } finally {
       setAiLoading(false);
     }
-  }, [aiQuery, enrichedServices]);
+  }, [aiQuery, enrichedServices, t]);
 
   // Apply filters
   const filteredServices = useMemo(() => {
@@ -346,7 +348,7 @@ const CategoryPage = () => {
 
             {/* City filter moved below as grid */}
 
-            <Select value={sortBy} onValueChange={(v) => { setSortBy(v as any); setAiSortedIds(null); }}>
+            <Select value={sortBy} onValueChange={(v) => { setSortBy(v as SortBy); setAiSortedIds(null); }}>
               <SelectTrigger className="w-full md:w-48">
                 <SlidersHorizontal className="w-4 h-4 ml-2 text-muted-foreground" />
                 <SelectValue placeholder="ترتيب حسب" />

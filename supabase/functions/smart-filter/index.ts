@@ -6,6 +6,17 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+interface ServiceInput {
+  id: string;
+  title?: string;
+  description?: string;
+  price_min?: number | null;
+  price_max?: number | null;
+  avgRating?: number;
+  adminRating?: number | null;
+  city?: string | null;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -14,7 +25,7 @@ serve(async (req) => {
 
     if (!query || !services || services.length === 0) {
       return new Response(
-        JSON.stringify({ sortedIds: services?.map((s: any) => s.id) ?? [] }),
+        JSON.stringify({ sortedIds: services?.map((s: ServiceInput) => s.id) ?? [] }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -24,7 +35,7 @@ serve(async (req) => {
 
     const servicesSummary = services
       .map(
-        (s: any) =>
+        (s: ServiceInput) =>
           `ID:${s.id}|${s.title}|${s.description?.slice(0, 80)}|سعر:${s.price_min ?? "?"}-${s.price_max ?? "?"}|تقييم_مستخدمين:${s.avgRating?.toFixed(1) ?? "0"}|تقييم_مشرف:${s.adminRating ?? "لا يوجد"}|مدينة:${s.city ?? "غير محدد"}`
       )
       .join("\n");
@@ -92,7 +103,7 @@ serve(async (req) => {
       const t = await response.text();
       console.error("AI error:", response.status, t);
       return new Response(
-        JSON.stringify({ sortedIds: services.map((s: any) => s.id) }),
+        JSON.stringify({ sortedIds: services.map((s: ServiceInput) => s.id) }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -107,7 +118,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ sortedIds: services.map((s: any) => s.id) }),
+      JSON.stringify({ sortedIds: services.map((s: ServiceInput) => s.id) }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
